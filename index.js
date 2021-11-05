@@ -26,7 +26,7 @@ const printPdf = async (inData) => {
   });
   const page = await browser.newPage();
   await page.goto('https://marriagecertificate-perne.netlify.app', {
-    waitUntil: 'networkidle2',
+    waitUntil: 'domcontentloaded',
   });
   const selectors = [
     '#groom-name',
