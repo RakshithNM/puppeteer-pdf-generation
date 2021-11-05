@@ -20,7 +20,10 @@ const corsOptions = {
 }
 
 const printPdf = async (inData) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const page = await browser.newPage();
   await page.goto('http://localhost:8080', {
     waitUntil: 'networkidle0',
