@@ -27,6 +27,7 @@ const printPdf = async (inData) => {
   const page = await browser.newPage();
   await page.goto('https://marriagecertificate-perne.netlify.app', {
     waitUntil: 'domcontentloaded',
+    timeout: 0
   });
   const selectors = [
     '#groom-name',
