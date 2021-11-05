@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const whitelist = ['http://localhost:1234', 'https://sheetsclient.netlify.app']
+const whitelist = ['http://localhost:1234', 'https://pernekshethracertificates.netlify.app/']
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
