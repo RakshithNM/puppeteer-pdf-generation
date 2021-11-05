@@ -25,7 +25,7 @@ const printPdf = async (inData) => {
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
-  await page.goto('http://localhost:8080', {
+  await page.goto('https://marriagecertificate-perne.netlify.app', {
     waitUntil: 'networkidle0',
   });
   const selectors = [
