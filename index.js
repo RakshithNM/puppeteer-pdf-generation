@@ -4,11 +4,15 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 const corsOptions = {
   origin: 'http://localhost:1234'
 };
 
-const printPdf = async () => {
+const printPdf = async (inData) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('http://localhost:8080', {
@@ -27,14 +31,14 @@ const printPdf = async () => {
   for(const selector of selectors) {
     await page.waitForSelector(selector);
   }
-  await page.type('#groom-name', 'SANDEEP K N');
-  await page.type('#groom-address1', 'S/o Mahalinga Patali & Veena');
-  await page.type('#groom-address2', 'Ajjavara House');
-  await page.type('#groom-address3', 'Sullia');
-  await page.type('#bride-name', 'PRATHEEKSHA P');
-  await page.type('#bride-address1', 'S/o Mahalinga Patali & Veena');
-  await page.type('#bride-address2', 'Ajjavara House');
-  await page.type('#bride-address3', 'Sullia');
+  await page.type('#groom-name', inData.groomName);
+  await page.type('#groom-address1', inData.groomAddress1);
+  await page.type('#groom-address2', inData.groomAddress2);
+  await page.type('#groom-address3', inData.groomAddress3);
+  await page.type('#bride-name', inData.brideName);
+  await page.type('#bride-address1', inData.brideAddress1);
+  await page.type('#bride-address2', inData.brideAddress2);
+  await page.type('#bride-address3', inData.brideAddress3);
   //await page.pdf({ path: 'certificate.pdf', format: 'a4' });
   const pdf = await page.pdf({ path: 'certificate.pdf', format: 'a4', printBackground: true });
 
@@ -43,8 +47,14 @@ const printPdf = async () => {
   return pdf;
 };
 
-app.get('/', cors(corsOptions), async (req, res) => {
-  const pdf = await printPdf().catch(e => console.log(e));
+app.post('/', cors(corsOptions), async (req, res) => {
+  console.log(JSON.parse(Object.keys(req.body)[0]));
+  if(!req.body) {
+    res.status(404).send("{}");
+    return;
+  }
+  const data = JSON.parse(Object.keys(req.body)[0]);
+  const pdf = await printPdf(data).catch(e => console.log(e));
   res.contentType('application/pdf');
   res.send(pdf);
 })
