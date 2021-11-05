@@ -25,10 +25,12 @@ const printPdf = async (inData) => {
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.goto('https://marriagecertificate-perne.netlify.app', {
     waitUntil: 'domcontentloaded',
     timeout: 0
   });
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   const selectors = [
     '#groom-name',
     '#groom-address1',
@@ -43,13 +45,21 @@ const printPdf = async (inData) => {
     await page.waitForSelector(selector);
   }
   await page.type('#groom-name', inData.groomName);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#groom-address1', inData.groomAddress1);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#groom-address2', inData.groomAddress2);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#groom-address3', inData.groomAddress3);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#bride-name', inData.brideName);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#bride-address1', inData.brideAddress1);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#bride-address2', inData.brideAddress2);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   await page.type('#bride-address3', inData.brideAddress3);
+  await page.waitForNavigation({waitUntil: "domcontentloaded"});
   //await page.pdf({ path: 'certificate.pdf', format: 'a4' });
   const pdf = await page.pdf({ path: 'certificate.pdf', format: 'a4', printBackground: true });
 
