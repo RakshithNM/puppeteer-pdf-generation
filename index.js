@@ -8,9 +8,16 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+const whitelist = ['http://localhost:1234', 'https://sheetsclient.netlify.app']
 const corsOptions = {
-  origin: 'http://localhost:1234'
-};
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 const printPdf = async (inData) => {
   const browser = await puppeteer.launch();
