@@ -64,16 +64,27 @@ const printPdf = async (inData) => {
 };
 
 app.post('/', cors(corsOptions), async (req, res) => {
-  console.log(JSON.parse(Object.keys(req.body)[0]));
   if(!req.body) {
-    res.status(404).send("{}");
+    res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
   }
-  const data = JSON.parse(Object.keys(req.body)[0]);
-  const pdf = await printPdf(data).catch(e => console.log(e));
-  res.contentType('application/pdf');
-  res.send(pdf);
-})
+  let data = null;
+  try {
+    data = JSON.parse(Object.keys(req.body)[0]);
+    console.log(data);
+  }
+  catch(e) {
+    res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
+    return;
+  }
+  if(data !== null) {
+    const pdf = await printPdf(data).catch(e => console.log(e));
+    res.contentType('application/pdf');
+    res.send(pdf);
+    return;
+  }
+  res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
