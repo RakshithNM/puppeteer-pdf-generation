@@ -40,7 +40,8 @@ const printPdf = async (inData) => {
     '#bride-address2',
     '#bride-address3',
     '#date',
-    '#registernumber'
+    '#registernumber',
+    '#issue-date'
   ];
   for(const selector of selectors) {
     await page.waitForSelector(selector);
@@ -55,6 +56,7 @@ const printPdf = async (inData) => {
   await page.type('#bride-address3', inData.brideAddress3);
   await page.type('#date', inData.date);
   await page.type('#registernumber', inData.registerNumber);
+  await page.type('#issue-date', inData.issueDate);
   //await page.pdf({ path: 'certificate.pdf', format: 'a4' });
   const pdf = await page.pdf({ path: 'certificate.pdf', format: 'a4', printBackground: true });
 
