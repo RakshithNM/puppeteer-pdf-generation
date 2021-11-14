@@ -57,7 +57,12 @@ const printPdf = async (inData) => {
   await page.type('#date', inData.date);
   await page.type('#registernumber', inData.registerNumber);
   await page.type('#issue-date', inData.issueDate);
-  const pdf = await page.pdf({ path: 'certificate.pdf', format: 'a4', printBackground: inData.printBackground });
+  const pdf = await page.pdf({
+    path: 'certificate.pdf',
+    format: 'A4',
+    preferCSSPageSize: true,
+    printBackground: inData.printBackground
+  });
 
   await browser.close();
 
