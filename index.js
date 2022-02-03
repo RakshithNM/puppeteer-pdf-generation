@@ -77,6 +77,7 @@ app.post('/', async (req, res) => {
   console.log(req.body);
   console.log("***************************");
   if(!req.body) {
+    console.log(1);
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
   }
@@ -86,6 +87,7 @@ app.post('/', async (req, res) => {
     console.log(data);
   }
   catch(e) {
+    console.log(2);
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
   }
@@ -95,7 +97,7 @@ app.post('/', async (req, res) => {
     res.send(pdf);
     return;
   }
-  res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
+  console.log(3)
 });
 
 app.listen(port, () => {
