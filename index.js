@@ -74,6 +74,8 @@ const printPdf = async (inData) => {
 };
 
 app.post('/', async (req, res) => {
+  console.log(req.body);
+  console.log("***************************");
   if(!req.body) {
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
