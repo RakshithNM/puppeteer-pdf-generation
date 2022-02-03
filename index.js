@@ -81,9 +81,10 @@ app.post('/', async (req, res) => {
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
   }
+  console.log("111111111111");
+  console.log(JSON.parse(req.body));
   let data = null;
   try {
-    console.log(JSON.parse(req.body));
     data = JSON.parse(req.body);
     console.log(data);
   }
