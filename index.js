@@ -73,7 +73,7 @@ const printPdf = async (inData) => {
   return pdf;
 };
 
-app.post('/', cors(corsOptions), async (req, res) => {
+app.post('/', async (req, res) => {
   if(!req.body) {
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
