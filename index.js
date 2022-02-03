@@ -81,26 +81,10 @@ app.post('/', async (req, res) => {
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
     return;
   }
-  console.log("111111111111");
-  console.log(Object.keys(req.body));
-  console.log(Object.keys(req.body)[0]);
-  let data = null;
-  try {
-    data = JSON.parse(req.body);
-    console.log(data);
-  }
-  catch(e) {
-    console.log(2);
-    res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
-    return;
-  }
-  if(data !== null) {
-    const pdf = await printPdf(data).catch(e => console.log(e));
-    res.contentType('application/pdf');
-    res.send(pdf);
-    return;
-  }
-  console.log(3)
+  const pdf = await printPdf(req.body).catch(e => console.log(e));
+  res.contentType('application/pdf');
+  res.send(pdf);
+  return;
 });
 
 app.listen(port, () => {
