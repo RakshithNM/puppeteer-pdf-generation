@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 const whitelist = [
   'http://localhost:1234',
   'https://pernekshethracertificates.netlify.app',
-  'https://retool.com'
+  'https://*.retool.com'
 ]
 const corsOptions = {
   origin: function (origin, callback) {
