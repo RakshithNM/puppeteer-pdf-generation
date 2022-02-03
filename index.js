@@ -83,6 +83,7 @@ app.post('/', async (req, res) => {
   }
   let data = null;
   try {
+    console.log(JSON.parse(req.body));
     data = JSON.parse(req.body);
     console.log(data);
   }
