@@ -65,7 +65,7 @@ const printPdf = async (inData) => {
     path: 'certificate.pdf',
     format: 'A4',
     preferCSSPageSize: true,
-    printBackground: inData.printBackground
+    printBackground: inData.printBackground === "true" ? true : false
   });
 
   await browser.close();
