@@ -82,7 +82,7 @@ app.post('/', async (req, res) => {
     return;
   }
   console.log("111111111111");
-  console.log(JSON.parse(Object.keys(req.body)[0]);
+  console.log(JSON.parse(Object.keys(req.body)[0]));
   let data = null;
   try {
     data = JSON.parse(req.body);
