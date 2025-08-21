@@ -1,27 +1,27 @@
-const express = require('express')
-const puppeteer = require('puppeteer');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
+import puppeteer from 'puppeteer';
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT ?? 3000;
 
-var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const whitelist = [
   'http://localhost:1234',
   'https://pernekshethracertificates.netlify.app',
-  'https://*.retool.com'
-]
+  // NOTE: wildcard like *.retool.com won't match with simple indexOf
+];
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
+  origin(origin, callback) {
+    if (!origin) return callback(null, true); // allow curl/postman
+    const ok =
+      whitelist.includes(origin) ||
+      /\.retool\.com$/.test(new URL(origin).hostname); // handle subdomains
+    return ok ? callback(null, true) : callback(new Error('Not allowed by CORS'));
   }
-}
+};
+app.use(cors(corsOptions));
 
 const printPdf = async (inData) => {
   const browser = await puppeteer.launch({
@@ -74,8 +74,6 @@ const printPdf = async (inData) => {
 };
 
 app.post('/', async (req, res) => {
-  console.log(req.body);
-  console.log("***************************");
   if(!req.body) {
     console.log(1);
     res.status(404).send("{ msg: 'Failed to generate the certificate, contact developer on bellare545@gmail.com' }");
@@ -88,6 +86,5 @@ app.post('/', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
-
+  console.log(`App listening at http://localhost:${port}`)
+});
