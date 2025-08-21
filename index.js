@@ -24,52 +24,51 @@ app.use(cors(corsOptions));
 
 const printPdf = async (inData) => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: true, // (In v24, boolean is fine. If you ever see a deprecation, use 'new'.)
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  const page = await browser.newPage();
-  page.setDefaultNavigationTimeout(0);
-  await page.goto('https://marriagecertificate-perne.netlify.app', {
-    waitUntil: 'domcontentloaded',
-    timeout: 0
-  });
-  const selectors = [
-    '#groom-name',
-    '#groom-address1',
-    '#groom-address2',
-    '#groom-address3',
-    '#bride-name',
-    '#bride-address1',
-    '#bride-address2',
-    '#bride-address3',
-    '#date',
-    '#registernumber',
-    '#issue-date'
-  ];
-  for(const selector of selectors) {
-    await page.waitForSelector(selector);
+
+  try {
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0); // or set a real number if you prefer
+
+    await page.goto('https://marriagecertificate-perne.netlify.app', {
+      waitUntil: 'domcontentloaded',
+      timeout: 60_000
+    });
+
+    const selectors = [
+      '#groom-name', '#groom-address1', '#groom-address2', '#groom-address3',
+      '#bride-name', '#bride-address1', '#bride-address2', '#bride-address3',
+      '#date', '#registernumber', '#issue-date'
+    ];
+    await Promise.all(selectors.map(sel => page.waitForSelector(sel, { timeout: 30_000 })));
+
+    const v = (x) => (x ?? '').toString();
+
+    await page.type('#groom-name', v(inData.groomName));
+    await page.type('#groom-address1', v(inData.groomAddress1));
+    await page.type('#groom-address2', v(inData.groomAddress2));
+    await page.type('#groom-address3', v(inData.groomAddress3));
+    await page.type('#bride-name', v(inData.brideName));
+    await page.type('#bride-address1', v(inData.brideAddress1));
+    await page.type('#bride-address2', v(inData.brideAddress2));
+    await page.type('#bride-address3', v(inData.brideAddress3));
+    await page.type('#date', v(inData.date));
+    await page.type('#registernumber', v(inData.registerNumber));
+    await page.type('#issue-date', v(inData.issueDate));
+
+    const pdf = await page.pdf({
+      path: 'certificate.pdf',
+      format: 'A4',
+      preferCSSPageSize: true,
+      printBackground: inData.printBackground === true || inData.printBackground === 'true'
+    });
+
+    return pdf;
+  } finally {
+    await browser.close();
   }
-  await page.type('#groom-name', inData.groomName);
-  await page.type('#groom-address1', inData.groomAddress1);
-  await page.type('#groom-address2', inData.groomAddress2);
-  await page.type('#groom-address3', inData.groomAddress3);
-  await page.type('#bride-name', inData.brideName);
-  await page.type('#bride-address1', inData.brideAddress1);
-  await page.type('#bride-address2', inData.brideAddress2);
-  await page.type('#bride-address3', inData.brideAddress3);
-  await page.type('#date', inData.date);
-  await page.type('#registernumber', inData.registerNumber);
-  await page.type('#issue-date', inData.issueDate);
-  const pdf = await page.pdf({
-    path: 'certificate.pdf',
-    format: 'A4',
-    preferCSSPageSize: true,
-    printBackground: inData.printBackground === "true" ? true : false
-  });
-
-  await browser.close();
-
-  return pdf;
 };
 
 app.post('/', async (req, res) => {
