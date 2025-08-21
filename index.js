@@ -23,12 +23,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const printPdf = async (inData) => {
-  // const browser = await puppeteer.launch({
-  //   headless: true, // (In v24, boolean is fine. If you ever see a deprecation, use 'new'.)
-  //   args: ['--no-sandbox', '--disable-setuid-sandbox']
-  // });
-
-  const browser = await puppeteer.launch();
+  console.log(inData, "inData");
+  const browser = await puppeteer.launch({
+    headless: true, // (In v24, boolean is fine. If you ever see a deprecation, use 'new'.)
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
 
   try {
     const page = await browser.newPage();
@@ -69,6 +68,7 @@ const printPdf = async (inData) => {
 
     return pdf;
   } finally {
+    console.log("Closing browser...");
     await browser.close();
   }
 };
