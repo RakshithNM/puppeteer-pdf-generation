@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import puppeteer from 'puppeteer';
 const app = express();
-const port = process.env.PORT ?? 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -85,6 +84,6 @@ app.post('/', async (req, res) => {
   return;
 });
 
-app.listen(port, () => {
+app.listen(3000, () => {
   console.log(`App listening at http://localhost:${port}`)
 });
